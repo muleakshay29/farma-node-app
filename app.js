@@ -13,7 +13,7 @@ server.listen(port, () => {
 
 const express = require("express");
 const cors = require("cors");
-require("../src/db/mongoos");
+require("./src/db/mongoos");
 const Category = require("./src/models/category");
 const Expense = require("./src/models/expense");
 
