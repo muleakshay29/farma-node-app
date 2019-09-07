@@ -34,6 +34,16 @@ app.post("/category", (req, res) => {
     });
 });
 
+app.get("/category", (req, res) => {
+  Category.find({})
+    .then(categories => {
+      res.send(categories);
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
+});
+
 app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
