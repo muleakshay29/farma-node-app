@@ -1,6 +1,6 @@
 const mongoos = require("mongoose");
 
-const Supplier = mongoos.model("Supplier", {
+const Supplier = mongoos.model("frm_supplier_master", {
   SUP_code: {
     type: String,
     required: true,
@@ -32,7 +32,7 @@ const Supplier = mongoos.model("Supplier", {
     trim: true
   },
   SUP_GSTNumber: {
-    type: Number,
+    type: String,
     required: true,
     trim: true
   },
@@ -67,7 +67,7 @@ const Supplier = mongoos.model("Supplier", {
     trim: true
   },
   SUP_Pin: {
-    type: String,
+    type: Number,
     required: false,
     trim: true
   },
