@@ -5,6 +5,7 @@ require("./src/db/mongoos");
 // const Supplier = require("./src/models/frm-supplier-master");
 
 const supplierRouter = require("./src/routers/frm-supplier-master");
+const commonMasterRouter = require("./src/routers/frm-common-master");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.get("/fetch-suppliers", (req, res) => {
 }); */
 
 app.use(supplierRouter);
+app.use(commonMasterRouter);
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);
