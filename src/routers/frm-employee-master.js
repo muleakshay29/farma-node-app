@@ -1,6 +1,31 @@
 const express = require("express");
 const EmployeeMaster = require("../models/frm-employee-master");
 const router = new express.Router();
+const multer = require("multer");
+
+const upload = multer({
+  dest: "images/employee-profile",
+  limits: {
+    fileSize: 1000000
+  },
+  fileFilter(req, file, callback) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      callback(new Error("Sorry, only JPG, JPEG, PNG & GIF files are allowed"));
+    }
+    callback(undefined, true);
+  }
+});
+
+router.post(
+  "/employee-avatar-upload",
+  upload.single("Emp_profile_img"),
+  (req, res) => {
+    res.send();
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
 
 router.post("/add-employee", (req, res) => {
   const employeeMaster = new EmployeeMaster(req.body);
