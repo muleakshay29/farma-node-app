@@ -8,6 +8,7 @@ const registration = require("./src/routers/frm-registration");
 const commonMasterChildRouter = require("./src/routers/frm-common-master-child");
 const accountTransaction = require("./src/routers/frm-transactions");
 const employeeMaster = require("./src/routers/frm-employee-master");
+const productMaster = require("./src/routers/frm-product-master");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use(commonMasterChildRouter);
 app.use(registration);
 app.use(accountTransaction);
 app.use(employeeMaster);
+app.use(productMaster);
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);
