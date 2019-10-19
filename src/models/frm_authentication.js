@@ -72,17 +72,6 @@ authenticationSchema.methods.generateAuthToken = async function() {
   return token;
 };
 
-// hash the password
-authenticationSchema.pre("save", async function(next) {
-  const user = this;
-
-  if (user.isModified("R_Password")) {
-    user.R_Password = await bcrypt.hash(user.R_Password, 8);
-  }
-
-  next();
-});
-
 authenticationSchema.statics.findByCredentials = async (
   R_UserName,
   R_Password
@@ -101,6 +90,17 @@ authenticationSchema.statics.findByCredentials = async (
 
   return user;
 };
+
+// hash the password
+authenticationSchema.pre("save", async function(next) {
+  const user = this;
+
+  if (user.isModified("R_Password")) {
+    user.R_Password = await bcrypt.hash(user.R_Password, 8);
+  }
+
+  next();
+});
 
 const Authentication = mongoose.model(
   "frm_registration",
