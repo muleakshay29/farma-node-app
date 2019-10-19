@@ -72,7 +72,7 @@ const ProductMaster = mongoos.model("frm_product_masters", {
     trim: true
   },
   PRO_Image: {
-    type: String,
+    type: Buffer,
     required: true,
     trim: true
   }

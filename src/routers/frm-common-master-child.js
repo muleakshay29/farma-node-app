@@ -14,14 +14,30 @@ router.post("/add-commonmaster-child", (req, res) => {
     });
 });
 
-router.get("/fetch-commonmaster-child", (req, res) => {
+/* router.get("/fetch-commonmaster-child", (req, res) => {
   CommonMasterChild.find({})
+    .populate("frm_common_master")
     .then(ccmaster => {
       res.send(ccmaster);
     })
     .catch(e => {
       res.status(400).send(e);
     });
+}); */
+
+router.get("/fetch-commonmaster-child", async (req, res) => {
+  try {
+    const data = await CommonMasterChild.find()
+      .populate({
+        path: "CM_id",
+        model: "frm_common_master",
+        select: "CM_Name"
+      })
+      .exec();
+    res.send(data);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 });
 
 router.post("/check-cmcname", (req, res) => {
@@ -38,6 +54,22 @@ router.get("/fetch-commonmasterchild-details/:id", (req, res) => {
   const _id = req.params.id;
 
   CommonMasterChild.findById(_id)
+    .then(ccmaster => {
+      if (!ccmaster) {
+        return res.status(404).send();
+      }
+
+      res.status(200).send(ccmaster);
+    })
+    .catch(e => {
+      res.status(500).send(e);
+    });
+});
+
+router.get("/fetch-commonchild-fromCM/:id", (req, res) => {
+  const CM_id = req.params.id;
+
+  CommonMasterChild.find({ CM_id: CM_id })
     .then(ccmaster => {
       if (!ccmaster) {
         return res.status(404).send();

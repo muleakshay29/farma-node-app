@@ -4,7 +4,7 @@ require("./src/db/mongoos");
 
 const supplierRouter = require("./src/routers/frm-supplier-master");
 const commonMasterRouter = require("./src/routers/frm-common-master");
-const registration = require("./src/routers/frm-registration");
+const authentication = require("./src/routers/frm_authentication");
 const commonMasterChildRouter = require("./src/routers/frm-common-master-child");
 const accountTransaction = require("./src/routers/frm-transactions");
 const employeeMaster = require("./src/routers/frm-employee-master");
@@ -18,7 +18,7 @@ app.use(cors());
 app.use(supplierRouter);
 app.use(commonMasterRouter);
 app.use(commonMasterChildRouter);
-app.use(registration);
+app.use(authentication);
 app.use(accountTransaction);
 app.use(employeeMaster);
 app.use(productMaster);

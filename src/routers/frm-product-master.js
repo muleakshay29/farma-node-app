@@ -11,11 +11,8 @@ const upload = multer({
   fileFilter(req, file, callback) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
       callback(new Error("Sorry, only JPG, JPEG, PNG & GIF files are allowed"));
-      //   res.status(400).send();
     }
 
-    // res.status(201).send();
-    // callback(new Error('File must be an Image'))
     callback(undefined, true);
   }
 });
@@ -24,6 +21,9 @@ router.post(
   "/product-image-upload",
   upload.single("PRO_Image"),
   (req, res) => {
+    // req.productMaster.PRO_Image = req.file.buffer;
+    // req.ProductMaster.PRO
+    console.log(req.file);
     res.send();
   },
   (error, req, res, next) => {

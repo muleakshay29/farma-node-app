@@ -1,17 +1,22 @@
-const mongoos = require("mongoose");
+const mongoose = require("mongoose");
+const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-// const Registration = mongoos.model("frm_registration", {
-const userSchema = new mongoos.Schema({
+const authenticationSchema = new mongoose.Schema({
   R_BusinessName: {
     type: String,
     required: true,
     trim: true
   },
-  R_UserName: {},
-  R_EmailId: {
+  R_UserName: {
     type: String,
     unique: true,
+    required: true,
+    trim: true
+  },
+  R_EmailId: {
+    type: String,
     required: true,
     trim: true,
     lowercase: true,
@@ -42,6 +47,7 @@ const userSchema = new mongoos.Schema({
   },
   R_IsActive: {
     type: Number,
+    default: 1,
     required: true
   },
   R_UserType: {
@@ -58,8 +64,16 @@ const userSchema = new mongoos.Schema({
   ]
 });
 
-// Hash the plain text R_Password before saving
-userSchema.pre("save", async function(next) {
+authenticationSchema.methods.generateAuthToken = async function() {
+  const user = this;
+  const token = jwt.sign({ _id: user._id.toString() }, "P@ssword!123");
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+  return token;
+};
+
+// hash the password
+authenticationSchema.pre("save", async function(next) {
   const user = this;
 
   if (user.isModified("R_Password")) {
@@ -69,8 +83,11 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-userSchema.statics.findByCredentials = async (R_UserName, R_Password) => {
-  const user = await Registration.findOne({ R_UserName });
+authenticationSchema.statics.findByCredentials = async (
+  R_UserName,
+  R_Password
+) => {
+  const user = await Authentication.findOne({ R_UserName });
 
   if (!user) {
     throw new Error("Unable to login");
@@ -85,5 +102,10 @@ userSchema.statics.findByCredentials = async (R_UserName, R_Password) => {
   return user;
 };
 
-const Registration = mongoos.model("frm_registration", userSchema);
-module.exports = Registration;
+const Authentication = mongoose.model(
+  "frm_registration",
+  authenticationSchema,
+  "frm_registration"
+);
+
+module.exports = Authentication;

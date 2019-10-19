@@ -1,8 +1,9 @@
 const express = require("express");
 const CommonMaster = require("../models/frm-common-master");
 const router = new express.Router();
+const auth = require("../middleware/auth");
 
-router.post("/add-commonmaster", (req, res) => {
+router.post("/add-commonmaster", auth, (req, res) => {
   const cmaster = new CommonMaster(req.body);
   cmaster
     .save()
@@ -14,7 +15,7 @@ router.post("/add-commonmaster", (req, res) => {
     });
 });
 
-router.get("/fetch-commonmaster", (req, res) => {
+router.get("/fetch-commonmaster", auth, (req, res) => {
   CommonMaster.find({})
     .then(cmaster => {
       res.send(cmaster);
@@ -24,7 +25,7 @@ router.get("/fetch-commonmaster", (req, res) => {
     });
 });
 
-router.post("/check-cmname", (req, res) => {
+router.post("/check-cmname", auth, (req, res) => {
   CommonMaster.find({ CM_Name: req.body.CM_Name })
     .then(cmaster => {
       res.send(cmaster);
@@ -34,7 +35,7 @@ router.post("/check-cmname", (req, res) => {
     });
 });
 
-router.get("/fetch-commonmaster-details/:id", (req, res) => {
+router.get("/fetch-commonmaster-details/:id", auth, (req, res) => {
   const _id = req.params.id;
 
   CommonMaster.findById(_id)
@@ -50,7 +51,7 @@ router.get("/fetch-commonmaster-details/:id", (req, res) => {
     });
 });
 
-router.patch("/update-commonmaster/:id", async (req, res) => {
+router.patch("/update-commonmaster/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["CM_Name"];
   const isValidOperation = updates.every(update =>
@@ -78,7 +79,7 @@ router.patch("/update-commonmaster/:id", async (req, res) => {
   }
 });
 
-router.delete("/commonmaster/:id", async (req, res) => {
+router.delete("/commonmaster/:id", auth, async (req, res) => {
   try {
     const commonMaster = await CommonMaster.findByIdAndDelete(req.params.id);
 
