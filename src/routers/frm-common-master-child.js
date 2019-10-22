@@ -1,8 +1,9 @@
 const express = require("express");
 const CommonMasterChild = require("../models/frm-common-master-child");
 const router = new express.Router();
+const auth = require("../middleware/auth");
 
-router.post("/add-commonmaster-child", (req, res) => {
+router.post("/add-commonmaster-child", auth, (req, res) => {
   const ccmaster = new CommonMasterChild(req.body);
   ccmaster
     .save()
@@ -25,7 +26,7 @@ router.post("/add-commonmaster-child", (req, res) => {
     });
 }); */
 
-router.get("/fetch-commonmaster-child", async (req, res) => {
+router.get("/fetch-commonmaster-child", auth, async (req, res) => {
   try {
     const data = await CommonMasterChild.find()
       .populate({
@@ -40,7 +41,7 @@ router.get("/fetch-commonmaster-child", async (req, res) => {
   }
 });
 
-router.post("/check-cmcname", (req, res) => {
+router.post("/check-cmcname", auth, (req, res) => {
   CommonMasterChild.find({ CMC_Name: req.body.CMC_Name })
     .then(ccmaster => {
       res.send(ccmaster);
@@ -50,7 +51,7 @@ router.post("/check-cmcname", (req, res) => {
     });
 });
 
-router.get("/fetch-commonmasterchild-details/:id", (req, res) => {
+router.get("/fetch-commonmasterchild-details/:id", auth, (req, res) => {
   const _id = req.params.id;
 
   CommonMasterChild.findById(_id)
@@ -66,7 +67,7 @@ router.get("/fetch-commonmasterchild-details/:id", (req, res) => {
     });
 });
 
-router.get("/fetch-commonchild-fromCM/:id", (req, res) => {
+router.get("/fetch-commonchild-fromCM/:id", auth, (req, res) => {
   const CM_id = req.params.id;
 
   CommonMasterChild.find({ CM_id: CM_id })
@@ -82,7 +83,7 @@ router.get("/fetch-commonchild-fromCM/:id", (req, res) => {
     });
 });
 
-router.patch("/update-commonmaster-child/:id", async (req, res) => {
+router.patch("/update-commonmaster-child/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["CMC_Name"];
   const isValidOperation = updates.every(update =>
@@ -110,7 +111,7 @@ router.patch("/update-commonmaster-child/:id", async (req, res) => {
   }
 });
 
-router.delete("/commonmasterchild/:id", async (req, res) => {
+router.delete("/commonmasterchild/:id", auth, async (req, res) => {
   try {
     const commonMasterChild = await CommonMasterChild.findByIdAndDelete(
       req.params.id
