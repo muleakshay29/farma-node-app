@@ -91,7 +91,6 @@ authenticationSchema.statics.findByCredentials = async (
   return user;
 };
 
-// hash the password
 authenticationSchema.pre("save", async function(next) {
   const user = this;
 
