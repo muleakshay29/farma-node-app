@@ -3,7 +3,7 @@ const EmployeeMaster = require("../models/frm-employee-master");
 const router = new express.Router();
 const multer = require("multer");
 
-const upload = multer({
+/* const upload = multer({
   dest: "images/employee-profile",
   limits: {
     fileSize: 1000000
@@ -25,7 +25,7 @@ router.post(
   (error, req, res, next) => {
     res.status(400).send({ error: error.message });
   }
-);
+); */
 
 router.post("/add-employee", (req, res) => {
   const employeeMaster = new EmployeeMaster(req.body);
@@ -39,7 +39,22 @@ router.post("/add-employee", (req, res) => {
     });
 });
 
-router.get("/fetch-employee", (req, res) => {
+router.get("/fetch-employee", async (req, res) => {
+  try {
+    const data = await EmployeeMaster.find()
+      .populate({
+        path: "Type_of_user",
+        model: "frm_common_master_child",
+        select: "CMC_Name"
+      })
+      .exec();
+    res.send(data);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+/* router.get("/fetch-employee", (req, res) => {
   EmployeeMaster.find({})
     .then(employeeMaster => {
       res.send(employeeMaster);
@@ -47,7 +62,7 @@ router.get("/fetch-employee", (req, res) => {
     .catch(e => {
       res.status(400).send(e);
     });
-});
+}); */
 
 router.post("/check-employeecode", (req, res) => {
   EmployeeMaster.find({ Emp_code: req.body.Emp_code })

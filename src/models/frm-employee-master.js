@@ -1,6 +1,6 @@
 const mongoos = require("mongoose");
 
-const EmployeeMaster = mongoos.model("frm_employee_master", {
+const empSchema = new mongoos.Schema({
   Emp_code: {
     type: String,
     required: true,
@@ -57,7 +57,8 @@ const EmployeeMaster = mongoos.model("frm_employee_master", {
     trim: true
   },
   Type_of_user: {
-    type: Number,
+    type: mongoos.Schema.Types.ObjectId,
+    ref: "frm_common_master_child",
     required: true,
     trim: true
   },
@@ -107,5 +108,11 @@ const EmployeeMaster = mongoos.model("frm_employee_master", {
     trim: true
   }
 });
+
+const EmployeeMaster = mongoos.model(
+  "frm_employee_master",
+  empSchema,
+  "frm_employee_master"
+);
 
 module.exports = EmployeeMaster;
