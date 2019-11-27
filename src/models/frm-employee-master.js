@@ -70,7 +70,8 @@ const empSchema = new mongoos.Schema({
   Created_date: {
     type: Date,
     required: true,
-    trim: true
+    trim: true,
+    default: Date.now
   },
   Updated_by: {
     type: String,
@@ -83,7 +84,8 @@ const empSchema = new mongoos.Schema({
   Active_flag: {
     type: Number,
     required: true,
-    trim: true
+    trim: true,
+    default: 1
   },
   Deleted_by: {
     type: String,

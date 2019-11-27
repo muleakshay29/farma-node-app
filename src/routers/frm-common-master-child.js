@@ -67,7 +67,7 @@ router.get("/fetch-commonmasterchild-details/:id", auth, (req, res) => {
     });
 });
 
-router.get("/fetch-commonchild-fromCM/:id", auth, (req, res) => {
+router.get("/fetch-commonchild-fromCM/:id", (req, res) => {
   const CM_id = req.params.id;
 
   CommonMasterChild.find({ CM_id: CM_id })
