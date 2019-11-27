@@ -74,12 +74,10 @@ const empSchema = new mongoos.Schema({
   },
   Updated_by: {
     type: String,
-    required: true,
     trim: true
   },
   Updated_date: {
     type: Date,
-    required: true,
     trim: true
   },
   Active_flag: {
@@ -89,22 +87,18 @@ const empSchema = new mongoos.Schema({
   },
   Deleted_by: {
     type: String,
-    required: true,
     trim: true
   },
   Deleted_date: {
     type: Date,
-    required: true,
     trim: true
   },
   Company_id: {
     type: Number,
-    required: true,
     trim: true
   },
   Year_id: {
     type: String,
-    required: true,
     trim: true
   }
 });

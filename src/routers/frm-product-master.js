@@ -2,6 +2,7 @@ const express = require("express");
 const ProductMaster = require("../models/frm-product-master");
 const router = new express.Router();
 const multer = require("multer");
+const auth = require("../middleware/auth");
 
 const upload = multer({
   dest: "images/product-images",
@@ -19,6 +20,7 @@ const upload = multer({
 
 router.post(
   "/product-image-upload",
+  auth,
   upload.single("PRO_Image"),
   (req, res) => {
     // req.productMaster.PRO_Image = req.file.buffer;
@@ -31,7 +33,7 @@ router.post(
   }
 );
 
-router.post("/add-product", (req, res) => {
+router.post("/add-product", auth, (req, res) => {
   const pmaster = new ProductMaster(req.body);
   pmaster
     .save()
@@ -43,7 +45,7 @@ router.post("/add-product", (req, res) => {
     });
 });
 
-router.get("/fetch-products", (req, res) => {
+router.get("/fetch-products", auth, (req, res) => {
   ProductMaster.find({})
     .then(pmaster => {
       res.send(pmaster);
@@ -53,7 +55,7 @@ router.get("/fetch-products", (req, res) => {
     });
 });
 
-router.post("/check-product-code", (req, res) => {
+router.post("/check-product-code", auth, (req, res) => {
   ProductMaster.find({ PRO_code: req.body.PRO_code })
     .then(pmaster => {
       res.send(pmaster);
@@ -63,7 +65,7 @@ router.post("/check-product-code", (req, res) => {
     });
 });
 
-router.get("/fetch-product-details/:id", (req, res) => {
+router.get("/fetch-product-details/:id", auth, (req, res) => {
   const _id = req.params.id;
 
   ProductMaster.findById(_id)
@@ -79,7 +81,7 @@ router.get("/fetch-product-details/:id", (req, res) => {
     });
 });
 
-router.patch("/update-product/:id", async (req, res) => {
+router.patch("/update-product/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "PRO_code",
@@ -123,7 +125,7 @@ router.patch("/update-product/:id", async (req, res) => {
   }
 });
 
-router.delete("/product-master/:id", async (req, res) => {
+router.delete("/product-master/:id", auth, async (req, res) => {
   try {
     const productMaster = await ProductMaster.findByIdAndDelete(req.params.id);
 

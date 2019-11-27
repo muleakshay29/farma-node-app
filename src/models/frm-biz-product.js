@@ -1,6 +1,6 @@
 const mongoos = require("mongoose");
 
-const ProductMaster = mongoos.model("frm_product_masters", {
+const bixProductSchema = new mongoos.Schema({
   PRO_code: {
     type: String,
     required: true,
@@ -123,4 +123,10 @@ const ProductMaster = mongoos.model("frm_product_masters", {
   }
 });
 
-module.exports = ProductMaster;
+const BizProduct = mongoos.model(
+  "frm_biz_product",
+  bixProductSchema,
+  "frm_biz_product"
+);
+
+module.exports = BizProduct;
