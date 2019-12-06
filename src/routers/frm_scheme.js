@@ -30,7 +30,24 @@ router.get("/fetch-scheme", async (req, res) => {
   }
 });
 
-router.get("/fetch-scheme-details/:id", (req, res) => {
+router.get("/fetch-scheme-details/:id", async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const data = await Scheme.findById(_id)
+      .populate({
+        path: "PRO_ID",
+        model: "frm_product_masters",
+        select: "PRO_Name"
+      })
+      .exec();
+    res.send(data);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+/* router.get("/fetch-scheme-details/:id", (req, res) => {
   const _id = req.params.id;
 
   Scheme.findById(_id)
@@ -44,11 +61,11 @@ router.get("/fetch-scheme-details/:id", (req, res) => {
     .catch(e => {
       res.status(500).send(e);
     });
-});
+}); */
 
 router.patch("/update-scheme/:id", async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["Quantity", "Free_Quantity"];
+  const allowedUpdates = ["PRO_ID", "Quantity", "Free_Quantity"];
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)
   );
