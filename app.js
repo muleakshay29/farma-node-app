@@ -10,6 +10,7 @@ const accountTransaction = require("./src/routers/frm-transactions");
 const employeeMaster = require("./src/routers/frm-employee-master");
 const productMaster = require("./src/routers/frm-product-master");
 const bizProduct = require("./src/routers/frm-biz-product");
+const scheme = require("./src/routers/frm_scheme");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use(accountTransaction);
 app.use(employeeMaster);
 app.use(productMaster);
 app.use(bizProduct);
+app.use(scheme);
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);
