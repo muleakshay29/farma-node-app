@@ -30,6 +30,22 @@ router.get("/fetch-scheme", async (req, res) => {
   }
 });
 
+router.get("/fetch-scheme-by-product/:id", async (req, res) => {
+  const _id = req.params.id;
+
+  Scheme.find({ PRO_ID: _id })
+    .then(schme => {
+      if (!schme) {
+        return res.status(404).send();
+      }
+
+      res.status(200).send(schme);
+    })
+    .catch(e => {
+      res.status(500).send(e);
+    });
+});
+
 router.get("/fetch-scheme-details/:id", async (req, res) => {
   const _id = req.params.id;
 
