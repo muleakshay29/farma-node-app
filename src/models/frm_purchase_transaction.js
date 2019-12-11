@@ -49,11 +49,13 @@ const transactionChildSchema = new mongoos.Schema({
   },
   PurchaseTransId: {
     type: mongoos.Schema.Types.ObjectId,
+    ref: "frm_purchase_transaction",
     required: true,
     trim: true
   },
   Product_id: {
     type: mongoos.Schema.Types.ObjectId,
+    ref: "frm_product_masters",
     required: true,
     trim: true
   },
@@ -64,6 +66,7 @@ const transactionChildSchema = new mongoos.Schema({
   },
   Product_Scheme: {
     type: mongoos.Schema.Types.ObjectId,
+    ref: "frm_schemes",
     required: true,
     trim: true
   },
