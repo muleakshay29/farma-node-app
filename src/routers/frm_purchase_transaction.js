@@ -65,7 +65,7 @@ router.get("/fetch-sales-order", async (req, res) => {
   }
 });
 
-router.get("/fetch-sales-details", async (req, res) => {
+router.post("/fetch-sales-details", async (req, res) => {
   try {
     const data = await TransactionChild.find({ _id: req.body.id })
       .populate({
