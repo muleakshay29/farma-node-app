@@ -65,4 +65,24 @@ router.get("/fetch-sales-order", async (req, res) => {
   }
 });
 
+router.get("/fetch-sales-details", async (req, res) => {
+  try {
+    const data = await TransactionChild.find({ _id: req.body.id })
+      .populate({
+        path: "Product_id",
+        model: "frm_product_masters",
+        select: "PRO_Name PRO_Barcode"
+      })
+      .populate({
+        path: "Product_Scheme",
+        model: "frm_schemes",
+        select: "Quantity Free_Quantity"
+      })
+      .exec();
+    res.send(data);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;
