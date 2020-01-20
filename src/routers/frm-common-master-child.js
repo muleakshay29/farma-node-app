@@ -41,13 +41,49 @@ router.get("/fetch-commonmaster-child", auth, async (req, res) => {
   }
 });
 
-router.post("/check-cmcname", auth, (req, res) => {
+/* router.post("/check-cmcname", auth, (req, res) => {
   CommonMasterChild.find({ CMC_Name: req.body.CMC_Name })
     .then(ccmaster => {
       res.send(ccmaster);
     })
     .catch(e => {
       res.status(400).send(e);
+    });
+}); */
+
+router.post("/check-cmcname", auth, (req, res) => {
+  const cmcId = req.body.cmcId;
+
+  CommonMasterChild.findOne({ CMC_Name: req.body.CMC_Name })
+    .then(ccmaster => {
+      if (!ccmaster) {
+        return res.json({
+          alreadyExist: false
+        });
+      }
+
+      if (cmcId) {
+        if (cmcId === ccmaster._id.toString()) {
+          return res.json({
+            alreadyExist: false
+          });
+        } else {
+          return res.json({
+            alreadyExist: true
+          });
+        }
+      }
+      // Validate the 'create ccmaster' form
+      else {
+        res.json({
+          alreadyExist: true
+        });
+      }
+    })
+    .catch(e => {
+      res.json({
+        alreadyExist: false
+      });
     });
 });
 

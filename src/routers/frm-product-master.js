@@ -67,13 +67,51 @@ router.get("/fetch-products", auth, (req, res) => {
     });
 }); */
 
-router.post("/check-product-code", auth, (req, res) => {
+/* router.post("/check-product-code", auth, (req, res) => {
   ProductMaster.find({ PRO_code: req.body.PRO_code })
     .then(pmaster => {
       res.send(pmaster);
     })
     .catch(e => {
       res.status(400).send(e);
+    });
+}); */
+
+router.post("/check-product-code", (req, res) => {
+  const proId = req.body.proId;
+
+  ProductMaster.findOne({ PRO_code: req.body.PRO_code })
+    .then(pmaster => {
+      // No pmaster with the same pmaster code in the database
+      if (!pmaster) {
+        return res.json({
+          alreadyExist: false
+        });
+      }
+
+      // Validate the 'edit pmaster' form
+      if (proId) {
+        if (proId === pmaster._id.toString()) {
+          return res.json({
+            alreadyExist: false
+          });
+        } else {
+          return res.json({
+            alreadyExist: true
+          });
+        }
+      }
+      // Validate the 'create pmaster' form
+      else {
+        res.json({
+          alreadyExist: true
+        });
+      }
+    })
+    .catch(e => {
+      res.json({
+        alreadyExist: false
+      });
     });
 });
 

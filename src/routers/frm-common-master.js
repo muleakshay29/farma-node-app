@@ -25,13 +25,49 @@ router.get("/fetch-commonmaster", auth, (req, res) => {
     });
 });
 
-router.post("/check-cmname", auth, (req, res) => {
+/* router.post("/check-cmname", auth, (req, res) => {
   CommonMaster.find({ CM_Name: req.body.CM_Name })
     .then(cmaster => {
       res.send(cmaster);
     })
     .catch(e => {
       res.status(400).send(e);
+    });
+}); */
+
+router.post("/check-cmname", auth, (req, res) => {
+  const cmId = req.body.cmId;
+
+  CommonMaster.findOne({ CM_Name: req.body.CM_Name })
+    .then(cmaster => {
+      if (!cmaster) {
+        return res.json({
+          alreadyExist: false
+        });
+      }
+
+      if (cmId) {
+        if (cmId === cmaster._id.toString()) {
+          return res.json({
+            alreadyExist: false
+          });
+        } else {
+          return res.json({
+            alreadyExist: true
+          });
+        }
+      }
+      // Validate the 'create cmaster' form
+      else {
+        res.json({
+          alreadyExist: true
+        });
+      }
+    })
+    .catch(e => {
+      res.json({
+        alreadyExist: false
+      });
     });
 });
 
