@@ -64,13 +64,54 @@ router.get("/fetch-employee", async (req, res) => {
     });
 }); */
 
-router.post("/check-employeecode", (req, res) => {
+/* router.post("/check-employeecode", (req, res) => {
   EmployeeMaster.find({ Emp_code: req.body.Emp_code })
     .then(employeeMaster => {
       res.send(employeeMaster);
     })
     .catch(e => {
       res.status(400).send(e);
+    });
+}); */
+
+router.post("/check-employeecode", (req, res) => {
+  const empId = req.body.empId;
+
+  EmployeeMaster.findOne({ Emp_code: req.body.Emp_code })
+    .then(employee => {
+      // No employee with the same employee code in the database
+      if (!employee) {
+        return res.json({
+          codeNotTaken: true
+        });
+      }
+
+      // Validate the 'edit employee' form
+      if (empId) {
+        if (empId === employee._id.toString()) {
+          return res.json({
+            codeNotTaken: true
+          });
+        } else {
+          return res.json({
+            codeNotTaken: false
+          });
+        }
+      }
+      // Validate the 'create employee' form
+      else {
+        res.json({
+          codeNotTaken: false
+        });
+      }
+
+      // res.send(employee);
+    })
+    .catch(e => {
+      // res.status(400).send(e);
+      res.json({
+        emailNotTaken: true
+      });
     });
 });
 
