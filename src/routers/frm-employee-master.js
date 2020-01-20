@@ -82,7 +82,7 @@ router.post("/check-employeecode", (req, res) => {
       // No employee with the same employee code in the database
       if (!employee) {
         return res.json({
-          codeNotTaken: true
+          alreadyExist: false
         });
       }
 
@@ -90,27 +90,24 @@ router.post("/check-employeecode", (req, res) => {
       if (empId) {
         if (empId === employee._id.toString()) {
           return res.json({
-            codeNotTaken: true
+            alreadyExist: false
           });
         } else {
           return res.json({
-            codeNotTaken: false
+            alreadyExist: true
           });
         }
       }
       // Validate the 'create employee' form
       else {
         res.json({
-          codeNotTaken: false
+          alreadyExist: true
         });
       }
-
-      // res.send(employee);
     })
     .catch(e => {
-      // res.status(400).send(e);
       res.json({
-        emailNotTaken: true
+        alreadyExist: false
       });
     });
 });
