@@ -92,7 +92,19 @@ router.get("/fetch-employee-details/:id", (req, res) => {
 
 router.patch("/update-employee/:id", async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["CM_Name"];
+  const allowedUpdates = [
+    "Emp_name",
+    "Emp_address",
+    "Emp_city",
+    "Emp_state",
+    "Emp_adhar",
+    "Emp_pan",
+    "User_name",
+    "Password",
+    "Email_id",
+    "Mobile_no",
+    "Type_of_user"
+  ];
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)
   );

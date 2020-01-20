@@ -7,6 +7,12 @@ const pTransactionSchema = new mongoos.Schema({
     trim: true,
     default: Date.now
   },
+  SupplierID: {
+    type: mongoos.Schema.Types.ObjectId,
+    ref: "frm_supplier_masters",
+    required: true,
+    trim: true
+  },
   PurchaseFlag: {
     type: Number,
     required: true,

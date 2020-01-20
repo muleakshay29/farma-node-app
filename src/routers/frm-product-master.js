@@ -47,6 +47,7 @@ router.post("/add-product", auth, (req, res) => {
 
 router.get("/fetch-products", auth, (req, res) => {
   ProductMaster.find({})
+    .lean()
     .then(pmaster => {
       res.send(pmaster);
     })
@@ -54,6 +55,17 @@ router.get("/fetch-products", auth, (req, res) => {
       res.status(400).send(e);
     });
 });
+
+/* router.post("/find-products", auth, (req, res) => {
+  console.log(req.body.PRO_Name);
+  ProductMaster.find({ PRO_Name: { $regex: ".*" + req.body.PRO_Name + ".*" } })
+    .then(pmaster => {
+      res.send(pmaster);
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
+}); */
 
 router.post("/check-product-code", auth, (req, res) => {
   ProductMaster.find({ PRO_code: req.body.PRO_code })
