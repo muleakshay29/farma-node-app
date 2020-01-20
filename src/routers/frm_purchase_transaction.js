@@ -58,6 +58,7 @@ router.get("/fetch-sales-order", async (req, res) => {
         model: "frm_schemes",
         select: "Quantity Free_Quantity"
       })
+      .sort({ InvoiceDate: -1 })
       .exec();
     res.send(data);
   } catch (e) {
