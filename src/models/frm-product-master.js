@@ -78,11 +78,13 @@ const ProductMaster = mongoos.model("frm_product_masters", {
   },
   PRO_Image: {
     type: Buffer,
-    trim: true
+    trim: true,
+    default: null
   },
   Created_by: {
     type: String,
-    trim: true
+    trim: true,
+    default: null
   },
   Created_date: {
     type: Date,
@@ -92,11 +94,13 @@ const ProductMaster = mongoos.model("frm_product_masters", {
   },
   Updated_by: {
     type: String,
-    trim: true
+    trim: true,
+    default: null
   },
   Updated_date: {
     type: Date,
-    trim: true
+    trim: true,
+    default: null
   },
   Active_flag: {
     type: Number,
@@ -106,17 +110,19 @@ const ProductMaster = mongoos.model("frm_product_masters", {
   },
   Deleted_by: {
     type: String,
-    trim: true
+    trim: true,
+    default: null
   },
   Deleted_date: {
     type: Date,
-    trim: true
+    trim: true,
+    default: null
   },
-  Company_id: {
+  CompanyID: {
     type: Number,
     trim: true
   },
-  Year_id: {
+  YearID: {
     type: String,
     trim: true
   }

@@ -120,6 +120,7 @@ router.get("/fetch-product-details/:id", auth, (req, res) => {
 
   ProductMaster.findById(_id)
     .then(pmaster => {
+      console.log(pmaster);
       if (!pmaster) {
         return res.status(404).send();
       }
