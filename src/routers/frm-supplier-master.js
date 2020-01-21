@@ -87,4 +87,61 @@ router.get("/supplier-details/:id", auth, (req, res) => {
     });
 });
 
+router.patch("/update-supplier/:id", auth, async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = [
+    "SUP_code",
+    "SUP_CompanyName",
+    "SUP_Address",
+    "SUP_ContactNumber1",
+    "SUP_ContactNumber2",
+    "SUP_OwnerName",
+    "SUP_GSTNumber",
+    "SUP_DrNo",
+    "SUP_PanNo",
+    "SUP_BizMailId",
+    "SUP_WhatsappNumber",
+    "SUP_Dist",
+    "SUP_City",
+    "SUP_Pin",
+    "SUP_State"
+  ];
+  const isValidOperation = updates.every(update =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid updates!" });
+  }
+
+  try {
+    const supplier = await Supplier.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!supplier) {
+      res.status(404).send();
+    }
+
+    res.send(supplier);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+router.delete("/supplier-master/:id", auth, async (req, res) => {
+  try {
+    const supplier = await Supplier.findByIdAndDelete(req.params.id);
+
+    if (!supplier) {
+      return res.status(404).send();
+    }
+
+    res.send(supplier);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 module.exports = router;
