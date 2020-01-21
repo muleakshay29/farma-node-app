@@ -37,7 +37,7 @@ router.get("/fetch-commonmaster", auth, (req, res) => {
 
 router.post("/check-cmname", auth, (req, res) => {
   const cmId = req.body.cmId;
-  const proCode = req.body.CM_Name.toLowerCase();
+  const proCode = req.body.CM_Name;
 
   CommonMaster.findOne({ CM_Name: proCode })
     .then(cmaster => {

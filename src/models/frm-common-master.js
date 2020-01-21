@@ -12,7 +12,9 @@ const commonMasterSchema = new mongoos.Schema({
   CM_Name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    unique: true,
+    uniqueCaseInsensitive: true
   }
 });
 
