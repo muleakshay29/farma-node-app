@@ -1,4 +1,5 @@
 const mongoos = require("mongoose");
+var uniqueValidator = require("mongoose-unique-validator");
 
 /* const CommonMaster = mongoos.model("frm_common_master", {
   CM_Name: {
@@ -17,6 +18,8 @@ const commonMasterSchema = new mongoos.Schema({
     uniqueCaseInsensitive: true
   }
 });
+
+commonMasterSchema.plugin(uniqueValidator);
 
 const CommonMaster = mongoos.model(
   "frm_common_master",
