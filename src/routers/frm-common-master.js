@@ -39,7 +39,10 @@ router.post("/check-cmname", auth, (req, res) => {
   const cmId = req.body.cmId;
   const proCode = req.body.CM_Name;
 
-  CommonMaster.findOne({ CM_Name: proCode })
+  CommonMaster.findOne(
+    { CM_Name: proCode },
+    { runValidators: true, context: "query" }
+  )
     .then(cmaster => {
       if (!cmaster) {
         return res.json({
