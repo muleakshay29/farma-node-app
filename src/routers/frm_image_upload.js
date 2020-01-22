@@ -1,17 +1,11 @@
 const express = require("express");
 const router = new express.Router();
-const bodyParser = require("body-parser");
 const path = require("path");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const GridFsStorage = require("multer-gridfs-storage");
 const Grid = require("gridfs-stream");
-
-const app = express();
-
-// Middleware
-app.use(bodyParser.json());
 
 // Mongo URI
 const connURL =
