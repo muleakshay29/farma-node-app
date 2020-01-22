@@ -4,7 +4,7 @@ const router = new express.Router();
 const multer = require("multer");
 const auth = require("../middleware/auth");
 
-const upload = multer({
+/* const upload = multer({
   dest: "images/product-images",
   limits: {
     fileSize: 1000000
@@ -31,7 +31,11 @@ router.post(
   (error, req, res, next) => {
     res.status(400).send({ error: error.message });
   }
-);
+); */
+
+/*----------------------File upload using grid fs------------------------ */
+
+/*----------------------File upload using grid fs------------------------ */
 
 router.post("/add-product", auth, (req, res) => {
   const pmaster = new ProductMaster(req.body);
