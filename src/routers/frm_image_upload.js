@@ -45,7 +45,7 @@ const upload = multer({ storage });
 
 // @route POST /upload
 // @desc  Uploads file to DB
-app.post("/upload", upload.single("file"), (req, res) => {
+router.post("/upload", upload.single("file"), (req, res) => {
   res.status(201).send({ file: req.file });
 });
 
