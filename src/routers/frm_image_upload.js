@@ -69,8 +69,6 @@ router.get("/product-image/:filename", (req, res) => {
     if (file.contentType === "image/jpeg" || file.contentType === "image/png") {
       // Read output to browser
       const readstream = gfs.createReadStream(file.filename);
-      console.log(readstream);
-      console.log(res);
       readstream.pipe(res);
     } else {
       res.status(404).json({
