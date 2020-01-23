@@ -49,6 +49,22 @@ router.post("/upload", upload.single("PRO_Image"), (req, res) => {
   res.status(201).send({ file: req.file });
 });
 
+// @route GET /files
+// @desc  Display all files in JSON
+router.get("/files", (req, res) => {
+  gfs.files.find().toArray((err, files) => {
+    // Check if files
+    if (!files || files.length === 0) {
+      return res.status(404).json({
+        err: "No files exist"
+      });
+    }
+
+    // Files exist
+    return res.json(files);
+  });
+});
+
 // @route GET /files/:filename
 // @desc  Display single file object
 router.get("/:filename", (req, res) => {
