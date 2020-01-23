@@ -45,8 +45,23 @@ const upload = multer({ storage });
 
 // @route POST /upload
 // @desc  Uploads file to DB
-router.post("/upload", upload.single("file"), (req, res) => {
+router.post("/upload", upload.single("PRO_Image"), (req, res) => {
   res.status(201).send({ file: req.file });
+});
+
+// @route GET /files/:filename
+// @desc  Display single file object
+router.get("/:filename", (req, res) => {
+  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    // Check if file
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: "No file exists"
+      });
+    }
+    // File exists
+    return res.json(file);
+  });
 });
 
 module.exports = router;
