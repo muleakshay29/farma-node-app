@@ -63,19 +63,17 @@ router.get("/products-count", auth, (req, res) => {
   }
 });
 
-/* router.get("/fetch-products", auth, (req, res) => {
+router.get("/fetch-products-dropdown", auth, (req, res) => {
   ProductMaster.find({})
-    .select("PRO_code PRO_Name PRO_Manufraturer")
-    .lean()
-    .limit(10)
-    .skip(10)
+    // .select("PRO_code PRO_Name PRO_Manufraturer")
+    .select("PRO_Name")
     .then(pmaster => {
       res.send(pmaster);
     })
     .catch(e => {
       res.status(400).send(e);
     });
-}); */
+});
 
 router.get("/fetch-products", auth, (req, res) => {
   var pageIndex = parseInt(req.query.pageIndex);
