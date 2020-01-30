@@ -49,20 +49,26 @@ router.post("/add-product", auth, (req, res) => {
     });
 });
 
-router.get("/fetch-products", auth, (req, res) => {
-  ProductMaster.find({})
-    .lean()
-    .then(pmaster => {
-      res.send(pmaster);
-    })
-    .catch(e => {
-      res.status(400).send(e);
+router.get("/products-count", auth, (req, res) => {
+  try {
+    ProductMaster.find().estimatedDocumentCount((err, count) => {
+      if (err) {
+        res.status(400).send(err);
+      }
+      const docCount = count;
+      res.send({ count: docCount });
     });
+  } catch (e) {
+    res.status(400).send(e);
+  }
 });
 
-/* router.post("/find-products", auth, (req, res) => {
-  console.log(req.body.PRO_Name);
-  ProductMaster.find({ PRO_Name: { $regex: ".*" + req.body.PRO_Name + ".*" } })
+/* router.get("/fetch-products", auth, (req, res) => {
+  ProductMaster.find({})
+    .select("PRO_code PRO_Name PRO_Manufraturer")
+    .lean()
+    .limit(10)
+    .skip(10)
     .then(pmaster => {
       res.send(pmaster);
     })
@@ -70,6 +76,36 @@ router.get("/fetch-products", auth, (req, res) => {
       res.status(400).send(e);
     });
 }); */
+
+router.get("/fetch-products", auth, (req, res) => {
+  var pageIndex = parseInt(req.query.pageIndex);
+  var pageSize = parseInt(req.query.pageSize);
+  var query = {};
+
+  query.skip = pageIndex * pageSize;
+  query.limit = pageSize;
+
+  ProductMaster.find({}, {}, query)
+    .select("PRO_code PRO_Name PRO_Manufraturer")
+    .then(pmaster => {
+      res.send(pmaster);
+    });
+});
+
+router.post("/find-products", auth, (req, res) => {
+  ProductMaster.find(
+    { PRO_Name: { $regex: req.body.PRO_Name, $options: "i" } },
+    (err, docs) => {
+      console.log(docs);
+    }
+  )
+    .then(pmaster => {
+      res.send(pmaster);
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
+});
 
 /* router.post("/check-product-code", auth, (req, res) => {
   ProductMaster.find({ PRO_code: req.body.PRO_code })
