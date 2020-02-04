@@ -1,6 +1,6 @@
 const mongoos = require("mongoose");
 
-const ProductMaster = mongoos.model("frm_product_masters", {
+const productSchema = new mongoos.Schema({
   PRO_code: {
     type: String,
     required: true,
@@ -127,5 +127,13 @@ const ProductMaster = mongoos.model("frm_product_masters", {
     trim: true
   }
 });
+
+productSchema.index({ PRO_Name: 1, type: -1 });
+
+const ProductMaster = mongoos.model(
+  "frm_product_masters",
+  productSchema,
+  "frm_product_masters"
+);
 
 module.exports = ProductMaster;
