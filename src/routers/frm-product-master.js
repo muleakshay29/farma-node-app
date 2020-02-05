@@ -92,6 +92,7 @@ router.get("/fetch-products", auth, (req, res) => {
 
 router.post("/find-products", auth, (req, res) => {
   ProductMaster.find({ PRO_Name: { $regex: req.body.PRO_Name, $options: "i" } })
+    .select("PRO_code PRO_Name PRO_Manufraturer")
     .then(pmaster => {
       res.send(pmaster);
     })
