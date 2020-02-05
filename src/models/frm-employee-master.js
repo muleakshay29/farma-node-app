@@ -1,11 +1,11 @@
 const mongoos = require("mongoose");
 
 const empSchema = new mongoos.Schema({
-  Emp_code: {
+  /* Emp_code: {
     type: String,
     required: true,
     trim: true
-  },
+  }, */
   Emp_name: {
     type: String,
     required: true,
