@@ -25,7 +25,7 @@ router.post("/add-commonmaster", auth, (req, res) => {
     });
 }); */
 
-router.get("/item-count", auth, (req, res) => {
+router.get("/cm-item-count", auth, (req, res) => {
   try {
     CommonMaster.find().estimatedDocumentCount((err, count) => {
       if (err) {
