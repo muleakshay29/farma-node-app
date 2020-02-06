@@ -15,8 +15,39 @@ router.post("/add-commonmaster", auth, (req, res) => {
     });
 });
 
-router.get("/fetch-commonmaster", auth, (req, res) => {
+/* router.get("/fetch-commonmaster", auth, (req, res) => {
   CommonMaster.find({})
+    .then(cmaster => {
+      res.send(cmaster);
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
+}); */
+
+router.get("/item-count", auth, (req, res) => {
+  try {
+    CommonMaster.find().estimatedDocumentCount((err, count) => {
+      if (err) {
+        res.status(400).send(err);
+      }
+      const docCount = count;
+      res.send({ count: docCount });
+    });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+router.get("/fetch-commonmaster", auth, (req, res) => {
+  var pageIndex = parseInt(req.query.pageIndex);
+  var pageSize = parseInt(req.query.pageSize);
+  var query = {};
+  query.skip = pageIndex * pageSize;
+  query.limit = pageSize;
+
+  CommonMaster.find({}, {}, query)
+    .select("CM_Name")
     .then(cmaster => {
       res.send(cmaster);
     })
@@ -25,15 +56,16 @@ router.get("/fetch-commonmaster", auth, (req, res) => {
     });
 });
 
-/* router.post("/check-cmname", auth, (req, res) => {
-  CommonMaster.find({ CM_Name: req.body.CM_Name })
+router.get("/find-cmname", auth, (req, res) => {
+  CommonMaster.find({ CM_Name: { $regex: req.body.CM_Name, $options: "i" } })
+    .select("CM_Name")
     .then(cmaster => {
       res.send(cmaster);
     })
     .catch(e => {
       res.status(400).send(e);
     });
-}); */
+});
 
 router.post("/check-cmname", auth, (req, res) => {
   const cmId = req.body.cmId;
