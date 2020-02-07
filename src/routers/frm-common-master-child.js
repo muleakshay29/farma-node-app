@@ -67,7 +67,11 @@ router.post("/find-cmcname", auth, (req, res) => {
   CommonMasterChild.find({
     CMC_Name: { $regex: req.body.CMC_Name, $options: "i" }
   })
-    .select("CMC_Name")
+    .populate({
+      path: "CM_id",
+      model: "frm_common_master",
+      select: "CM_Name"
+    })
     .then(cmcmaster => {
       res.send(cmcmaster);
     })
