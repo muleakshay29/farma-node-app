@@ -56,7 +56,7 @@ router.get("/fetch-commonmaster", auth, (req, res) => {
     });
 });
 
-router.get("/find-cmname", auth, (req, res) => {
+router.post("/find-cmname", auth, (req, res) => {
   CommonMaster.find({ CM_Name: { $regex: req.body.CM_Name, $options: "i" } })
     .select("CM_Name")
     .then(cmaster => {
