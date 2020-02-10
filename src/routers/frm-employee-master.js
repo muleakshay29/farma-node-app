@@ -1,31 +1,7 @@
 const express = require("express");
 const EmployeeMaster = require("../models/frm-employee-master");
 const router = new express.Router();
-const multer = require("multer");
-
-/* const upload = multer({
-  dest: "images/employee-profile",
-  limits: {
-    fileSize: 1000000
-  },
-  fileFilter(req, file, callback) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      callback(new Error("Sorry, only JPG, JPEG, PNG & GIF files are allowed"));
-    }
-    callback(undefined, true);
-  }
-});
-
-router.post(
-  "/employee-avatar-upload",
-  upload.single("Emp_profile_img"),
-  (req, res) => {
-    res.send();
-  },
-  (error, req, res, next) => {
-    res.status(400).send({ error: error.message });
-  }
-); */
+const auth = require("../middleware/auth");
 
 router.post("/add-employee", (req, res) => {
   const employeeMaster = new EmployeeMaster(req.body);
@@ -39,40 +15,56 @@ router.post("/add-employee", (req, res) => {
     });
 });
 
-router.get("/fetch-employee", async (req, res) => {
+router.get("/employee-count", auth, (req, res) => {
   try {
-    const data = await EmployeeMaster.find()
-      .populate({
-        path: "Type_of_user",
-        model: "frm_common_master_child",
-        select: "CMC_Name"
-      })
-      .exec();
-    res.send(data);
+    EmployeeMaster.find().estimatedDocumentCount((err, count) => {
+      if (err) {
+        res.status(400).send(err);
+      }
+      const docCount = count;
+      res.send({ count: docCount });
+    });
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-/* router.get("/fetch-employee", (req, res) => {
-  EmployeeMaster.find({})
-    .then(employeeMaster => {
-      res.send(employeeMaster);
-    })
-    .catch(e => {
-      res.status(400).send(e);
-    });
-}); */
+router.get("/fetch-employee", auth, (req, res) => {
+  var pageIndex = parseInt(req.query.pageIndex);
+  var pageSize = parseInt(req.query.pageSize);
+  var query = {};
+  query.skip = pageIndex * pageSize;
+  query.limit = pageSize;
 
-/* router.post("/check-employeecode", (req, res) => {
-  EmployeeMaster.find({ Emp_code: req.body.Emp_code })
+  EmployeeMaster.find({}, {}, query)
+    .populate({
+      path: "Type_of_user",
+      model: "frm_common_master_child",
+      select: "CMC_Name"
+    })
     .then(employeeMaster => {
       res.send(employeeMaster);
     })
     .catch(e => {
       res.status(400).send(e);
     });
-}); */
+});
+
+router.post("/find-employee", auth, (req, res) => {
+  CommonMaster.find({ Emp_name: { $regex: req.body.Emp_name, $options: "i" } })
+    .populate({
+      path: "Type_of_user",
+      model: "frm_common_master_child",
+      select: "CMC_Name"
+    })
+    .select("Emp_name Email_id Mobile_no Type_of_user")
+    .then(employeeMaster => {
+      res.send(employeeMaster);
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
+});
 
 router.post("/check-employeecode", (req, res) => {
   const empId = req.body.empId;
