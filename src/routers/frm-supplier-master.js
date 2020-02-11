@@ -29,7 +29,7 @@ router.get("/supplier-count", auth, (req, res) => {
   }
 });
 
-/* router.get("/fetch-suppliers", auth, (req, res) => {
+router.get("/fetch-all-suppliers", auth, (req, res) => {
   Supplier.find({})
     .then(suppliers => {
       res.send(suppliers);
@@ -37,7 +37,7 @@ router.get("/supplier-count", auth, (req, res) => {
     .catch(e => {
       res.status(400).send(e);
     });
-}); */
+});
 
 router.get("/fetch-suppliers", auth, (req, res) => {
   var pageIndex = parseInt(req.query.pageIndex);
