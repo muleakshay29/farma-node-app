@@ -15,7 +15,7 @@ router.post("/add-scheme", (req, res) => {
     });
 });
 
-router.get("/fetch-scheme", async (req, res) => {
+/* router.get("/fetch-scheme", async (req, res) => {
   try {
     const data = await Scheme.find()
       .populate({
@@ -28,6 +28,56 @@ router.get("/fetch-scheme", async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
+}); */
+
+router.get("/scheme-count", auth, (req, res) => {
+  try {
+    Scheme.find().estimatedDocumentCount((err, count) => {
+      if (err) {
+        res.status(400).send(err);
+      }
+      const docCount = count;
+      res.send({ count: docCount });
+    });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+router.get("/fetch-scheme", auth, (req, res) => {
+  var pageIndex = parseInt(req.query.pageIndex);
+  var pageSize = parseInt(req.query.pageSize);
+  var query = {};
+  query.skip = pageIndex * pageSize;
+  query.limit = pageSize;
+
+  Scheme.find({}, {}, query)
+    .populate({
+      path: "PRO_ID",
+      model: "frm_product_masters",
+      select: "PRO_Name"
+    })
+    .then(scheme => {
+      res.send(scheme);
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
+});
+
+router.post("/find-scheme", auth, (req, res) => {
+  Scheme.find({ PRO_Name: { $regex: req.body.PRO_Name, $options: "i" } })
+    .populate({
+      path: "PRO_ID",
+      model: "frm_product_masters",
+      select: "PRO_Name"
+    })
+    .then(scheme => {
+      res.send(scheme);
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
 });
 
 router.get("/fetch-scheme-by-product/:id", async (req, res) => {
