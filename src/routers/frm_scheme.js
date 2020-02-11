@@ -1,7 +1,7 @@
 const express = require("express");
 const Scheme = require("../models/frm_scheme");
 const router = new express.Router();
-// const auth = require("../middleware/auth");
+const auth = require("../middleware/auth");
 
 router.post("/add-scheme", (req, res) => {
   const scheme = new Scheme(req.body);
