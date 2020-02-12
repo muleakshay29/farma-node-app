@@ -1,5 +1,6 @@
 const express = require("express");
 const Scheme = require("../models/frm_scheme");
+const Product = require("../models/frm-product-master");
 const router = new express.Router();
 const auth = require("../middleware/auth");
 
@@ -14,21 +15,6 @@ router.post("/add-scheme", (req, res) => {
       res.status(400).send(e);
     });
 });
-
-/* router.get("/fetch-scheme", async (req, res) => {
-  try {
-    const data = await Scheme.find()
-      .populate({
-        path: "PRO_ID",
-        model: "frm_product_masters",
-        select: "PRO_Name"
-      })
-      .exec();
-    res.send(data);
-  } catch (e) {
-    res.status(400).send(e);
-  }
-}); */
 
 router.get("/scheme-count", auth, (req, res) => {
   try {
@@ -66,7 +52,7 @@ router.get("/fetch-scheme", auth, (req, res) => {
 });
 
 router.post("/find-scheme", auth, (req, res) => {
-  Scheme.find({ PRO_Name: { $regex: req.body.PRO_Name, $options: "i" } })
+  Scheme.find({ PRO_ID: { $regex: req.body.PRO_ID, $options: "i" } })
     .populate({
       path: "PRO_ID",
       model: "frm_product_masters",
