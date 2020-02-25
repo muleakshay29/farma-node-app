@@ -1,14 +1,15 @@
 const mongoos = require("mongoose");
 
 const stockSchema = new mongoos.Schema({
+  Invoice_no: {
+    type: String,
+    required: true,
+    trim: true
+  },
   PRO_ID: {
     type: mongoos.Schema.Types.ObjectId,
     ref: "frm_product_masters",
     required: true,
-    trim: true
-  },
-  PRO_Barcode: {
-    type: String,
     trim: true
   },
   PRO_Batch: {
