@@ -16,6 +16,7 @@ const bizProduct = require("./src/routers/frm-biz-product");
 const scheme = require("./src/routers/frm_scheme");
 const transactions = require("./src/routers/frm_purchase_transaction");
 const imageUpload = require("./src/routers/frm_image_upload");
+const stockTrans = require("./src/routers/frm-stock-transactions");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use(bizProduct);
 app.use(scheme);
 app.use(transactions);
 app.use(imageUpload);
+app.use(stockTrans);
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);
