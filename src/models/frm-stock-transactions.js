@@ -17,6 +17,11 @@ const stockSchema = new mongoos.Schema({
     required: true,
     trim: true
   },
+  PRO_Expiry: {
+    type: Date,
+    required: true,
+    trim: true
+  },
   PRO_Purchase_Unit: {
     type: Number,
     trim: true
