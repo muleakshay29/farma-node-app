@@ -15,4 +15,21 @@ router.post("/add-stock-trans", (req, res) => {
     });
 });
 
+router.get("/fetch-product-batch/:id", auth, (req, res) => {
+  const PRO_ID = req.params.id;
+
+  Stock.find({ PRO_ID: PRO_ID })
+    .select("PRO_Batch PRO_Expiry")
+    .then(stock => {
+      if (!stock) {
+        return res.status(404).send();
+      }
+
+      res.status(200).send(stock);
+    })
+    .catch(e => {
+      res.status(500).send(e);
+    });
+});
+
 module.exports = router;
