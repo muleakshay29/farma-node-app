@@ -54,6 +54,38 @@ router.get("/sales-order-count", auth, (req, res) => {
   }
 });
 
+router.get("/fetch-purchase-order", auth, async (req, res) => {
+  var pageIndex = parseInt(req.query.pageIndex);
+  var pageSize = parseInt(req.query.pageSize);
+  var query = {};
+  query.skip = pageIndex * pageSize;
+  query.limit = pageSize;
+
+  try {
+    const data = await TransactionChild.find({}, {}, query)
+      .populate({
+        path: "PurchaseTransId",
+        model: "frm_purchase_transaction",
+        select: "_id InvoiceDate"
+      })
+      .populate({
+        path: "Product_id",
+        model: "frm_product_masters",
+        select: "PRO_Name PRO_Barcode"
+      })
+      .populate({
+        path: "SupplierID",
+        model: "frm_supplier_master",
+        select: "SUP_CompanyName"
+      })
+      .sort({ InvoiceDate: -1 })
+      .exec();
+    res.send(data);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
 router.get("/fetch-sales-order", auth, async (req, res) => {
   var pageIndex = parseInt(req.query.pageIndex);
   var pageSize = parseInt(req.query.pageSize);
