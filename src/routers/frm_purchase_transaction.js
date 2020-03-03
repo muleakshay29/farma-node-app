@@ -62,17 +62,7 @@ router.get("/fetch-purchase-order", auth, async (req, res) => {
   query.limit = pageSize;
 
   try {
-    const data = await TransactionChild.find({}, {}, query)
-      .populate({
-        path: "PurchaseTransId",
-        model: "frm_purchase_transaction",
-        select: "_id InvoiceDate"
-      })
-      .populate({
-        path: "Product_id",
-        model: "frm_product_masters",
-        select: "PRO_Name PRO_Barcode"
-      })
+    const data = await PurchaseTrans.find({}, {}, query)
       .populate({
         path: "SupplierID",
         model: "frm_supplier_master",
