@@ -76,6 +76,37 @@ router.get("/fetch-purchase-order", auth, async (req, res) => {
   }
 });
 
+router.post("/purchase-order-details", async (req, res) => {
+  const _id = req.body.PurchaseTransId;
+
+  PurchaseTrans.findById({ _id })
+    .populate({
+      path: "PurchaseTransId",
+      model: "frm_purchase_transaction_child",
+      select: "_id InvoiceDate"
+    })
+    .populate({
+      path: "Product_id",
+      model: "frm_product_masters",
+      select: "PRO_Name PRO_Barcode"
+    })
+    .populate({
+      path: "Product_Scheme",
+      model: "frm_schemes",
+      select: "Quantity Free_Quantity"
+    })
+    .then(purchase => {
+      if (!purchase) {
+        return res.status(404).send();
+      }
+
+      res.status(200).send(purchase);
+    })
+    .catch(e => {
+      res.status(500).send(e);
+    });
+});
+
 router.get("/fetch-sales-order", auth, async (req, res) => {
   var pageIndex = parseInt(req.query.pageIndex);
   var pageSize = parseInt(req.query.pageSize);
