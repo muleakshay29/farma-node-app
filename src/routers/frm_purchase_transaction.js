@@ -78,12 +78,12 @@ router.get("/fetch-purchase-order", auth, async (req, res) => {
 
 router.post("/purchase-order-details", async (req, res) => {
   const _id = req.body.PurchaseTransId;
+  const SupplierID = req.body.SupplierID;
 
-  PurchaseTrans.findById({ _id })
+  TransactionChild.find({ PurchaseTransId: _id })
     .populate({
       path: "PurchaseTransId",
-      model: "frm_purchase_transaction_child",
-      select: "_id InvoiceDate"
+      model: "frm_purchase_transaction"
     })
     .populate({
       path: "Product_id",
