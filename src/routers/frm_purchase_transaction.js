@@ -89,11 +89,6 @@ router.post("/purchase-order-details", async (req, res) => {
       model: "frm_product_masters",
       select: "PRO_Name PRO_Barcode"
     })
-    .populate({
-      path: "Product_Scheme",
-      model: "frm_schemes",
-      select: "Quantity Free_Quantity"
-    })
     .then(purchase => {
       if (!purchase) {
         return res.status(404).send();
