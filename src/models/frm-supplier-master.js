@@ -1,11 +1,11 @@
 const mongoos = require("mongoose");
 
 const Supplier = mongoos.model("frm_supplier_master", {
-  SUP_code: {
+  /* SUP_code: {
     type: String,
     required: true,
     trim: true
-  },
+  }, */
   SUP_CompanyName: {
     type: String,
     required: true,

@@ -4,7 +4,7 @@ const router = new express.Router();
 const multer = require("multer");
 const auth = require("../middleware/auth");
 
-const upload = multer({
+/* const upload = multer({
   dest: "images/product-images",
   limits: {
     fileSize: 1000000
@@ -31,7 +31,11 @@ router.post(
   (error, req, res, next) => {
     res.status(400).send({ error: error.message });
   }
-);
+); */
+
+/*----------------------File upload using grid fs------------------------ */
+
+/*----------------------File upload using grid fs------------------------ */
 
 router.post("/add-product", auth, (req, res) => {
   const pmaster = new ProductMaster(req.body);
@@ -45,9 +49,24 @@ router.post("/add-product", auth, (req, res) => {
     });
 });
 
-router.get("/fetch-products", auth, (req, res) => {
+router.get("/products-count", auth, (req, res) => {
+  try {
+    ProductMaster.find().estimatedDocumentCount((err, count) => {
+      if (err) {
+        res.status(400).send(err);
+      }
+      const docCount = count;
+      res.send({ count: docCount });
+    });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+router.get("/fetch-products-dropdown", auth, (req, res) => {
   ProductMaster.find({})
-    .lean()
+    // .select("PRO_code PRO_Name PRO_Manufraturer")
+    .select("PRO_Name")
     .then(pmaster => {
       res.send(pmaster);
     })
@@ -56,16 +75,31 @@ router.get("/fetch-products", auth, (req, res) => {
     });
 });
 
-/* router.post("/find-products", auth, (req, res) => {
-  console.log(req.body.PRO_Name);
-  ProductMaster.find({ PRO_Name: { $regex: ".*" + req.body.PRO_Name + ".*" } })
+router.get("/fetch-products", auth, (req, res) => {
+  var pageIndex = parseInt(req.query.pageIndex);
+  var pageSize = parseInt(req.query.pageSize);
+  var query = {};
+
+  query.skip = pageIndex * pageSize;
+  query.limit = pageSize;
+
+  ProductMaster.find({}, {}, query)
+    .select("PRO_code PRO_Name PRO_Manufraturer")
+    .then(pmaster => {
+      res.send(pmaster);
+    });
+});
+
+router.post("/find-products", auth, (req, res) => {
+  ProductMaster.find({ PRO_Name: { $regex: req.body.PRO_Name, $options: "i" } })
+    .select("PRO_code PRO_Name PRO_Manufraturer")
     .then(pmaster => {
       res.send(pmaster);
     })
     .catch(e => {
       res.status(400).send(e);
     });
-}); */
+});
 
 /* router.post("/check-product-code", auth, (req, res) => {
   ProductMaster.find({ PRO_code: req.body.PRO_code })
@@ -120,6 +154,7 @@ router.get("/fetch-product-details/:id", auth, (req, res) => {
 
   ProductMaster.findById(_id)
     .then(pmaster => {
+      console.log(pmaster);
       if (!pmaster) {
         return res.status(404).send();
       }

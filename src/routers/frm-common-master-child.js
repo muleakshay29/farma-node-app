@@ -15,18 +15,21 @@ router.post("/add-commonmaster-child", auth, (req, res) => {
     });
 });
 
-/* router.get("/fetch-commonmaster-child", (req, res) => {
-  CommonMasterChild.find({})
-    .populate("frm_common_master")
-    .then(ccmaster => {
-      res.send(ccmaster);
-    })
-    .catch(e => {
-      res.status(400).send(e);
+router.get("/cmc-item-count", auth, (req, res) => {
+  try {
+    CommonMasterChild.find().estimatedDocumentCount((err, count) => {
+      if (err) {
+        res.status(400).send(err);
+      }
+      const docCount = count;
+      res.send({ count: docCount });
     });
-}); */
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
 
-router.get("/fetch-commonmaster-child", auth, async (req, res) => {
+/* router.get("/fetch-commonmaster-child", auth, async (req, res) => {
   try {
     const data = await CommonMasterChild.find()
       .populate({
@@ -39,17 +42,43 @@ router.get("/fetch-commonmaster-child", auth, async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
+}); */
+
+router.get("/fetch-commonmaster-child", auth, (req, res) => {
+  var pageIndex = parseInt(req.query.pageIndex);
+  var pageSize = parseInt(req.query.pageSize);
+  var query = {};
+
+  query.skip = pageIndex * pageSize;
+  query.limit = pageSize;
+
+  CommonMasterChild.find({}, {}, query)
+    .populate({
+      path: "CM_id",
+      model: "frm_common_master",
+      select: "CM_Name"
+    })
+    .then(cmcmaster => {
+      res.send(cmcmaster);
+    });
 });
 
-/* router.post("/check-cmcname", auth, (req, res) => {
-  CommonMasterChild.find({ CMC_Name: req.body.CMC_Name })
-    .then(ccmaster => {
-      res.send(ccmaster);
+router.post("/find-cmcname", auth, (req, res) => {
+  CommonMasterChild.find({
+    CMC_Name: { $regex: req.body.CMC_Name, $options: "i" }
+  })
+    .populate({
+      path: "CM_id",
+      model: "frm_common_master",
+      select: "CM_Name"
+    })
+    .then(cmcmaster => {
+      res.send(cmcmaster);
     })
     .catch(e => {
       res.status(400).send(e);
     });
-}); */
+});
 
 router.post("/check-cmcname", auth, (req, res) => {
   const cmcId = req.body.cmcId;

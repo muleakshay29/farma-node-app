@@ -77,7 +77,7 @@ const bixProductSchema = new mongoos.Schema({
     trim: true
   },
   PRO_Image: {
-    type: Buffer,
+    type: String,
     trim: true
   },
   Created_by: {

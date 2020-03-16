@@ -1,6 +1,6 @@
 const mongoos = require("mongoose");
 
-const ProductMaster = mongoos.model("frm_product_masters", {
+const productSchema = new mongoos.Schema({
   PRO_code: {
     type: String,
     required: true,
@@ -77,12 +77,14 @@ const ProductMaster = mongoos.model("frm_product_masters", {
     trim: true
   },
   PRO_Image: {
-    type: Buffer,
-    trim: true
+    type: String,
+    trim: true,
+    default: null
   },
   Created_by: {
     type: String,
-    trim: true
+    trim: true,
+    default: null
   },
   Created_date: {
     type: Date,
@@ -92,11 +94,13 @@ const ProductMaster = mongoos.model("frm_product_masters", {
   },
   Updated_by: {
     type: String,
-    trim: true
+    trim: true,
+    default: null
   },
   Updated_date: {
     type: Date,
-    trim: true
+    trim: true,
+    default: null
   },
   Active_flag: {
     type: Number,
@@ -106,20 +110,30 @@ const ProductMaster = mongoos.model("frm_product_masters", {
   },
   Deleted_by: {
     type: String,
-    trim: true
+    trim: true,
+    default: null
   },
   Deleted_date: {
     type: Date,
-    trim: true
+    trim: true,
+    default: null
   },
-  Company_id: {
+  CompanyID: {
     type: Number,
     trim: true
   },
-  Year_id: {
+  YearID: {
     type: String,
     trim: true
   }
 });
+
+productSchema.index({ PRO_Name: 1, type: -1 });
+
+const ProductMaster = mongoos.model(
+  "frm_product_masters",
+  productSchema,
+  "frm_product_masters"
+);
 
 module.exports = ProductMaster;
